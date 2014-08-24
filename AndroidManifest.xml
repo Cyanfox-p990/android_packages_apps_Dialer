@@ -16,7 +16,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:sharedUserId="com.android.dialer"
-    package="com.android.dialer">
+    package="com.android.dialer"
+    coreApp="true" >
 
     <uses-permission android:name="android.permission.CALL_PRIVILEGED" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -44,15 +45,22 @@
     <uses-permission android:name="com.android.voicemail.permission.READ_WRITE_ALL_VOICEMAIL" />
     <uses-permission android:name="android.permission.ALLOW_ANY_CODEC_FOR_PLAYBACK" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="android.permission.READ_PHONE_BLACKLIST" />
+    <uses-permission android:name="android.permission.CHANGE_PHONE_BLACKLIST" />
     <!-- allow broadcasting secret code intents that reboot the phone -->
     <uses-permission android:name="android.permission.REBOOT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- allow brodcasting across all users -->
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
+    <!-- send analytic events through internal package -->
+    <uses-permission android:name="com.cyngn.cmstats.SEND_ANALYTICS" />
     <!-- This tells the activity manager to not delay any of our activity
      start requests, even if they happen immediately after the user
      presses home. -->
     <uses-permission android:name="android.permission.STOP_APP_SWITCHES" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="com.qti.permission.DIAG" />
+    <uses-permission android:name="com.qti.permission.IMS" />
 
     <application
         android:name="DialerApplication"
@@ -70,11 +78,11 @@
              dialpad screen. -->
         <activity android:name=".DialtactsActivity"
             android:label="@string/launcherDialer"
-            android:theme="@style/DialtactsTheme"
+            android:theme="@style/DialtactsThemeHiddenActionBar"
             android:launchMode="singleTask"
             android:clearTaskOnLaunch="true"
             android:icon="@mipmap/ic_launcher_phone"
-            android:screenOrientation="portrait"
+            android:screenOrientation="nosensor"
             android:enabled="@*android:bool/config_voice_capable"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
             <intent-filter>
@@ -140,7 +148,7 @@
         <activity android:name="com.android.dialer.calllog.CallLogActivity"
             android:label="@string/call_log_activity_title"
             android:theme="@style/DialtactsThemeWithActionBarOverlay"
-            android:screenOrientation="portrait"
+            android:screenOrientation="nosensor"
             android:icon="@mipmap/ic_launcher_phone">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -153,13 +161,13 @@
         <activity android:name="com.android.dialer.list.AllContactsActivity"
             android:label="@string/show_all_contacts_title"
             android:theme="@style/DialtactsThemeWithActionBarOverlay"
-            android:screenOrientation="portrait">
+            android:screenOrientation="nosensor">
         </activity>
 
         <activity android:name="com.android.dialer.CallDetailActivity"
                   android:label="@string/callDetailTitle"
                   android:theme="@style/CallDetailActivityTheme"
-                  android:screenOrientation="portrait"
+                  android:screenOrientation="nosensor"
                   android:icon="@mipmap/ic_launcher_phone"
                   android:parentActivityName="com.android.dialer.calllog.CallLogActivity"
             >
@@ -173,7 +181,7 @@
         <activity android:name=".callstats.CallStatsDetailActivity"
             android:label="@string/callStatsDetailTitle"
             android:theme="@style/CallDetailActivityTheme"
-            android:screenOrientation="portrait"
+            android:screenOrientation="nosensor"
             android:icon="@mipmap/ic_launcher_phone" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -339,6 +347,11 @@
                 <action android:name="com.android.incallui.ACTION_HANG_UP_ONGOING_CALL" />
             </intent-filter>
         </receiver>
+
+        <provider android:name="com.android.dialer.lookup.LookupProvider"
+                  android:authorities="com.android.dialer.provider"
+                  android:exported="false"
+                  android:multiprocess="false" />
 
     </application>
 </manifest>
